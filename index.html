@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>来訪者受付フォーム</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+    font-family: "Segoe UI", sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 480px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+}
+label {
+    font-weight: bold;
+    margin-top: 12px;
+    display: block;
+}
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background: #0078d4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+}
+#qrArea {
+    text-align: center;
+    margin-top: 30px;
+}
+#qrArea canvas {
+    margin: 0 auto;
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+    <h1>来訪者受付フォーム</h1>
+
+    <label>会社名</label>
+    <input type="text" id="company">
+
+    <label>氏名</label>
+    <input type="text" id="name">
+
+    <label>用件</label>
+    <input type="text" id="purpose">
+
+    <button onclick="submitForm()">送信してQRを表示</button>
+
+    <div id="qrArea"></div>
+</div>
+
+<script>
+function generateVisitorID() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = ("0" + (now.getMonth()+1)).slice(-2);
+    const d = ("0" + now.getDate()).slice(-2);
+    const h = ("0" + now.getHours()).slice(-2);
+    const min = ("0" + now.getMinutes()).slice(-2);
+    const s = ("0" + now.getSeconds()).slice(-2);
+
+    return `GUEST-${y}${m}${d}-${h}${min}${s}`;
+}
+
+function submitForm() {
+    const company = document.getElementById("company").value.trim();
+    const name = document.getElementById("name").value.trim();
+    const purpose = document.getElementById("purpose").value.trim();
+
+    if (!company || !name || !purpose) {
+        alert("全ての項目を入力してください");
+        return;
+    }
+
+    const visitorID = generateVisitorID();
+
+    // ▼ 後でBフェーズで作る：センターPCへデータ送信（Webhook）
+    fetch("http://192.168.11.16:5000/api/visitor", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            company: company,
+            name: name,
+            purpose: purpose
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        const visitorID = data.visitor_id;
+
+        document.getElementById("qrArea").innerHTML = "";
+        new QRCode(document.getElementById("qrArea"), {
+            text: visitorID,
+            width: 200,
+            height: 200
+        });
+    });
+
+
+    // 入力欄をクリア
+    document.getElementById("company").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("purpose").value = "";
+}
+</script>
+
+</body>
+</html>
