@@ -1,3 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>来訪者受付フォーム</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+<h2>来訪者受付フォーム</h2>
+
+<div>
+    <label>会社名：</label>
+    <input type="text" id="company">
+</div>
+
+<div>
+    <label>氏名：</label>
+    <input type="text" id="name">
+</div>
+
+<div>
+    <label>来訪目的：</label>
+    <input type="text" id="purpose">
+</div>
+
+<button onclick="submitForm()">QRコードを発行</button>
+
+<hr>
+
+<div id="qrArea"></div>
+
 <script>
 function submitForm() {
     const company = document.getElementById("company").value.trim();
@@ -38,5 +70,7 @@ function submitForm() {
     document.getElementById("name").value = "";
     document.getElementById("purpose").value = "";
 }
-</script> 
-         
+</script>
+
+</body>
+</html>
