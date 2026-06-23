@@ -1,0 +1,41 @@
+<script>
+function submitForm() {
+    const company = document.getElementById("company").value.trim();
+    const name = document.getElementById("name").value.trim();
+    const purpose = document.getElementById("purpose").value.trim();
+
+    if (!company || !name || !purpose) {
+        alert("全ての項目を入力してください");
+        return;
+    }
+
+    fetch("/api/visitor", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            company: company,
+            name: name,
+            purpose: purpose
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (!data.visitor_id) {
+            alert("サーバーエラー：visitor_id が返されませんでした");
+            return;
+        }
+
+        document.getElementById("qrArea").innerHTML = "";
+        new QRCode(document.getElementById("qrArea"), {
+            text: data.visitor_id,
+            width: 200,
+            height: 200
+        });
+    });
+
+    document.getElementById("company").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("purpose").value = "";
+}
+</script>
