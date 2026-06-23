@@ -1,46 +1,49 @@
-from flask import Flask
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
+from datetime import datetime
+import qrcode
+import base64
+from io import BytesIO
+import os
 
 app = Flask(__name__)
+CORS(app)
 
-@app.route('/')
-def index():
-    return 'Render Flask connection successful!'
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-if __name__ == '__main__':
-    app.run()
- 
-import os
-import json
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-from flask import request, jsonify
+# ① 受付QR（入口QR）
+@app.route("/reception_qr")
+def reception_qr():
+    url = "https://cosmos-8402.github.io/visitor-form/"
 
-def get_sheet():
-    creds_json = os.getenv("GOOGLE_CREDENTIALS")
-    creds_dict = json.loads(creds_json)
+    qr = qrcode.make(url)
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
+    qr_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-    scope = [
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive"
-    ]
+    return render_template("reception.html", qr_base64=qr_base64)
 
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-    client = gspread.authorize(creds)
+# ② 入力フォーム
+@app.route("/register")
+def register():
+    return render_template("index.html")
 
-    # ★センターのスプレッドシートID
-    sheet = client.open_by_key("1B0YR6_clv6WfNdzubSTv4VJ7kVrjvdPrEJX6OSGhwhg").sheet1
-    return sheet
-
-@app.route('/api/visitor', methods=['POST'])
+# ③ 来訪者情報の受信API（ExcelはRenderで使えないので一時停止）
+@app.route("/api/visitor", methods=["POST"])
 def visitor():
-    data = request.json
-    sheet = get_sheet()
+    data = request.get_json()
 
-    sheet.append_row([
-        data.get("name"),
-        data.get("company"),
-        data.get("purpose"),
-        data.get("time")
-    ])
+    # Excel 書き込みは Render では不可のためコメントアウト
+    # wb = openpyxl.load_workbook(r"C:\temp\パイトン\VisitorMaster.xlsx")
+    # ws = wb.active
 
-    return jsonify({"status": "success"})  
+    now = datetime.now()
+    visitor_id = f"TEST-{now.strftime('%Y%m%d-%H%M%S')}"
+
+    return jsonify({"visitor_id": visitor_id})
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
