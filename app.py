@@ -43,4 +43,4 @@ def visitor():
         data.get("time")
     ])
 
-    return jsonify({"status": "success"})
+    return jsonify({"status": "success"}) 
