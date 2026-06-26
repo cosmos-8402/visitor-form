@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>来訪者QRコード</title>
+</head>
+<body>
+    <h1>来訪者ID QRコード</h1>
+    <p>受付でこのQRコードを提示してください。</p>
+
+    <div>{{ qr_svg|safe }}</div>
+
+    <p>ID: {{ visitor_id }}</p>
+</body>
+</html>
