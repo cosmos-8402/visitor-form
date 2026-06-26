@@ -49,20 +49,6 @@ def visitor():
 
     return render_template("index.html")
 
-# ③ 来訪者情報の受信API（ExcelはRenderで使えないので一時停止）
-@app.route("/api/visitor", methods=["POST"])
-def visitor():
-    data = request.get_json()
-
-    # Excel 書き込みは Render では不可のためコメントアウト
-    # wb = openpyxl.load_workbook(r"C:\temp\パイトン\VisitorMaster.xlsx")
-    # ws = wb.active
-
-    now = datetime.now()
-    visitor_id = f"TEST-{now.strftime('%Y%m%d-%H%M%S')}"
-
-    return jsonify({"visitor_id": visitor_id})
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)  
