@@ -46,7 +46,7 @@ def reception_qr():
 
     return render_template("reception.html", qr_svg=qr_svg)
 
-# ② 入力フォーム
+# ② 入力フォーム（visitor_id 発行）
 @app.route('/api/visitor', methods=['POST'])
 def visitor():
     data = request.json
@@ -67,6 +67,18 @@ def visitor():
     ])
 
     return jsonify({"visitor_id": visitor_id})
+
+# ★③ 本人ID QR 表示ページ（ここに置くのが最適）
+@app.route("/visitor_qr/<visitor_id>")
+def visitor_qr(visitor_id):
+    factory = qrcode.image.svg.SvgPathImage
+    img = qrcode.make(visitor_id, image_factory=factory)
+
+    buffer = BytesIO()
+    img.save(buffer)
+    qr_svg = buffer.getvalue().decode()
+
+    return render_template("visitor_qr.html", qr_svg=qr_svg)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
