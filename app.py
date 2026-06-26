@@ -5,6 +5,25 @@ import qrcode
 import base64
 from io import BytesIO
 import os
+import json
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+def get_sheet():
+    creds_json = os.getenv("GOOGLE_CREDENTIALS")
+    creds_dict = json.loads(creds_json)
+
+    scope = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
+
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    client = gspread.authorize(creds)
+
+    # ★センターのスプレッドシートIDを入れる
+    sheet = client.open_by_key("1B0YR6_clv6WfNdzubSTv4VJ7kVrjvdPrEJX6OSGhwhg").sheet1
+    return sheet
 
 app = Flask(__name__)
 CORS(app)
