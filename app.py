@@ -37,7 +37,6 @@ def home():
 def reception_qr():
     url = "https://visitor-form-1.onrender.com"
 
-    # SVG で QR を生成（Pillow 不要）
     factory = qrcode.image.svg.SvgImage
     img = qrcode.make(url, image_factory=factory)
 
