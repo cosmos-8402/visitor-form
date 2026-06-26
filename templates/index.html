@@ -80,23 +80,28 @@
     </div>
 
     <script>
-        function submitForm() {
-            const data = {
-                company: document.getElementById("company").value,
-                name: document.getElementById("name").value,
-                purpose: document.getElementById("purpose").value
-            };
+    function submitForm() {
+        const data = {
+            company: document.getElementById("company").value,
+            name: document.getElementById("name").value,
+            purpose: document.getElementById("purpose").value
+        };
 
-            fetch("/api/visitor", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            })
-            .then(res => res.json())
-            .then(json => {
-                alert("受付完了：QRコードを受付に提示してください\nID: " + json.visitor_id);
-            });
-        }
-    </script>
+        fetch("/api/visitor", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(json => {
+            // 受付完了メッセージ
+            alert("受付完了：QRコードを受付に提示してください\nID: " + json.visitor_id);
+
+            // ★ここが重要：QR表示ページへ遷移
+            window.location.href = "/reception_qr";
+        });
+    }
+</script>
+
 </body>
 </html>
