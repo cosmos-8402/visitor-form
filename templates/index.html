@@ -2,75 +2,101 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+
+    <!-- ★スマホ最適化の最重要タグ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>来訪者受付フォーム</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-</head>
-<body>
 
-<h2>来訪者受付フォーム</h2>
-
-<div>
-    <label>会社名：</label>
-    <input type="text" id="company">
-</div>
-
-<div>
-    <label>氏名：</label>
-    <input type="text" id="name">
-</div>
-
-<div>
-    <label>来訪目的：</label>
-    <input type="text" id="purpose">
-</div>
-
-<button onclick="submitForm()">QRコードを発行</button>
-
-<hr>
-
-<div id="qrArea"></div>
-
-<script>
-function submitForm() {
-    const company = document.getElementById("company").value.trim();
-    const name = document.getElementById("name").value.trim();
-    const purpose = document.getElementById("purpose").value.trim();
-
-    if (!company || !name || !purpose) {
-        alert("全ての項目を入力してください");
-        return;
-    }
-
-    fetch("/api/visitor", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            company: company,
-            name: name,
-            purpose: purpose
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-
-        if (!data.visitor_id) {
-            alert("サーバーエラー：visitor_id が返されませんでした");
-            return;
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f7f7f7;
         }
 
-        document.getElementById("qrArea").innerHTML = "";
-        new QRCode(document.getElementById("qrArea"), {
-            text: data.visitor_id,
-            width: 200,
-            height: 200
-        });
-    });
+        h1 {
+            font-size: 1.6rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    document.getElementById("company").value = "";
-    document.getElementById("name").value = "";
-    document.getElementById("purpose").value = "";
-}
-</script>
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
 
+        label {
+            font-size: 1.1rem;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 25px;
+            font-size: 1.2rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+        }
+
+        button:active {
+            background: #0056c1;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>来訪者受付フォーム</h1>
+
+    <div class="form-container">
+        <label>会社名</label>
+        <input id="company" type="text">
+
+        <label>氏名</label>
+        <input id="name" type="text">
+
+        <label>用件</label>
+        <input id="purpose" type="text">
+
+        <button onclick="submitForm()">QRコードを発行</button>
+    </div>
+
+    <script>
+        function submitForm() {
+            const data = {
+                company: document.getElementById("company").value,
+                name: document.getElementById("name").value,
+                purpose: document.getElementById("purpose").value
+            };
+
+            fetch("/api/visitor", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(json => {
+                alert("受付完了：QRコードを受付に提示してください\nID: " + json.visitor_id);
+            });
+        }
+    </script>
 </body>
 </html>
