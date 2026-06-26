@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from datetime import datetime
 import qrcode
-import base64
+import qrcode.image.svg
 from io import BytesIO
 import os
 import json
@@ -21,7 +21,7 @@ def get_sheet():
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
 
-    # ★センターのスプレッドシートIDを入れる
+    # ★センターのスプレッドシートID
     sheet = client.open_by_key("1B0YR6_clv6WfNdzubSTv4VJ7kVrjvdPrEJX6OSGhwhg").sheet1
     return sheet
 
@@ -32,17 +32,20 @@ CORS(app)
 def home():
     return render_template("index.html")
 
-# ① 受付QR（入口QR）
+# ① 受付QR（入口QR） SVG 方式
 @app.route("/reception_qr")
 def reception_qr():
     url = "https://visitor-form-1.onrender.com"
 
-    qr = qrcode.make(url)
-    buffer = BytesIO()
-    qr.save(buffer, format="PNG")
-    qr_base64 = base64.b64encode(buffer.getvalue()).decode()
+    # SVG で QR を生成（Pillow 不要）
+    factory = qrcode.image.svg.SvgImage
+    img = qrcode.make(url, image_factory=factory)
 
-    return render_template("reception.html", qr_base64=qr_base64)
+    buffer = BytesIO()
+    img.save(buffer)
+    qr_svg = buffer.getvalue().decode()
+
+    return render_template("reception.html", qr_svg=qr_svg)
 
 # ② 入力フォーム
 @app.route('/api/visitor', methods=['POST'])
@@ -66,8 +69,7 @@ def visitor():
 
     return jsonify({"visitor_id": visitor_id})
 
-    return render_template("index.html")
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)   
+    app.run(host="0.0.0.0", port=port)
+   
