@@ -21,7 +21,6 @@ def get_sheet():
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
 
-    # ★センターのスプレッドシートID
     sheet = client.open_by_key("1B0YR6_clv6WfNdzubSTv4VJ7kVrjvdPrEJX6OSGhwhg").sheet1
     return sheet
 
@@ -32,12 +31,13 @@ CORS(app)
 def home():
     return render_template("index.html")
 
-# ① 受付QR（入口QR） SVG 方式
+# ① 受付QR（入口QR） SVG Path 方式
 @app.route("/reception_qr")
 def reception_qr():
     url = "https://visitor-form-1.onrender.com"
 
-    factory = qrcode.image.svg.SvgImage
+    # SVG Path 方式（Render で最も安定）
+    factory = qrcode.image.svg.SvgPathImage
     img = qrcode.make(url, image_factory=factory)
 
     buffer = BytesIO()
@@ -71,4 +71,5 @@ def visitor():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
    
