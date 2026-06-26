@@ -26,8 +26,27 @@ def reception_qr():
     return render_template("reception.html", qr_base64=qr_base64)
 
 # ② 入力フォーム
-@app.route("/register")
-def register():
+@app.route('/api/visitor', methods=['POST'])
+def visitor():
+    data = request.json
+    sheet = get_sheet()
+
+    now = datetime.now()
+    date_str = now.strftime("%Y/%m/%d")
+    time_str = now.strftime("%H:%M")
+    visitor_id = f"VIS-{now.strftime('%Y%m%d-%H%M%S')}"
+
+    sheet.append_row([
+        date_str,
+        time_str,
+        visitor_id,
+        data.get("company"),
+        data.get("name"),
+        data.get("purpose")
+    ])
+
+    return jsonify({"visitor_id": visitor_id})
+
     return render_template("index.html")
 
 # ③ 来訪者情報の受信API（ExcelはRenderで使えないので一時停止）
