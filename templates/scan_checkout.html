@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>退館QRスキャン</title>
+
+    <!-- QRコード読み取りライブラリ -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        h1 { text-align: center; }
+        #reader { width: 300px; margin: auto; }
+    </style>
+</head>
+<body>
+    <h1>退館QRスキャン</h1>
+    <p>来訪者のQRコードをカメラにかざしてください。</p>
+
+    <div id="reader"></div>
+
+    <script>
+        function onScanSuccess(decodedText) {
+            // visitor_id を取得したら退館処理へ自動遷移
+            window.location.href = "/checkout/" + decodedText;
+        }
+
+        const html5QrCode = new Html5Qrcode("reader");
+        html5QrCode.start(
+            { facingMode: "environment" },   // 背面カメラ
+            { fps: 10, qrbox: 250 },         // 読み取り設定
+            onScanSuccess
+        );
+    </script>
+</body>
+</html>
