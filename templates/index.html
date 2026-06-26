@@ -79,7 +79,7 @@
         <button onclick="submitForm()">QRコードを発行</button>
     </div>
 
-    <script>
+   <script>
     function submitForm() {
         const data = {
             company: document.getElementById("company").value,
@@ -94,14 +94,13 @@
         })
         .then(res => res.json())
         .then(json => {
-            // 受付完了メッセージ
-            alert("受付完了：QRコードを受付に提示してください\nID: " + json.visitor_id);
+            // ★アラートを削除
+            // alert("受付完了：QRコードを受付に提示してください\nID: " + json.visitor_id);
 
-            // ★ここが重要：QR表示ページへ遷移
-            window.location.href = "/reception_qr";
+            // ★本人ID QR 表示ページへ直接遷移
+            window.location.href = "/visitor_qr/" + json.visitor_id;
         });
     }
 </script>
-
 </body>
 </html>
