@@ -80,6 +80,10 @@ def visitor_qr(visitor_id):
 
     return render_template("visitor_qr.html", qr_svg=qr_svg)
 
+@app.route("/scan_checkout")
+def scan_checkout():
+    return render_template("scan_checkout.html")
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
