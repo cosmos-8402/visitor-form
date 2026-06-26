@@ -84,6 +84,29 @@ def visitor_qr(visitor_id):
 def scan_checkout():
     return render_template("scan_checkout.html")
 
+@app.route("/checkout/<visitor_id>")
+def checkout(visitor_id):
+    sheet = get_sheet()
+
+    # シート全体を取得
+    records = sheet.get_all_records()
+
+    # visitor_id の行番号を探す
+    row_index = None
+    for i, row in enumerate(records, start=2):  # 2行目からデータ
+        if row.get("visitor_id") == visitor_id:
+            row_index = i
+            break
+
+    if row_index is None:
+        return f"ID {visitor_id} は見つかりませんでした。"
+
+    # 退館時刻を記録
+    now = datetime.now().strftime("%H:%M")
+    sheet.update_cell(row_index, 7, now)  # G列に退館時刻を記録
+
+    return render_template("checkout_done.html", visitor_id=visitor_id)
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
