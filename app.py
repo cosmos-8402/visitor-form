@@ -35,7 +35,7 @@ def home():
 # ① 受付QR（入口QR）
 @app.route("/reception_qr")
 def reception_qr():
-    url = "https://cosmos-8402.github.io/visitor-form/"
+    url = "https://visitor-form-1.onrender.com"
 
     qr = qrcode.make(url)
     buffer = BytesIO()
