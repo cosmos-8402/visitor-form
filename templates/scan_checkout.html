@@ -3,44 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>退館QRスキャン</title>
+    <title>退館QR読み取り</title>
 
-    <!-- QRコード読み取りライブラリ -->
     <script src="https://unpkg.com/html5-qrcode"></script>
 
     <style>
-        body { font-family: sans-serif; padding: 20px; }
-        h1 { text-align: center; }
-        #reader { width: 300px; margin: auto; }
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            background: #f7f7f7;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #reader {
+            width: 300px;
+            margin: auto;
+        }
     </style>
 </head>
+
 <body>
-    <h1>退館QRスキャン</h1>
-    <p>来訪者のQRコードをカメラにかざしてください。</p>
+    <h1>退館QR読み取り</h1>
 
     <div id="reader"></div>
 
     <script>
         function onScanSuccess(decodedText) {
-            const id = decodedText.trim();   // ← これが決め手
-            window.location.href = "/checkout/" + id;
+            console.log("QR:", decodedText);
+            window.location.href = "/checkout/" + decodedText;
         }
 
         const html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start(
-    { facingMode: "environment" },
-    {
-        fps: 10,
-        qrbox: 300,
-        aspectRatio: 1.0,
-        videoConstraints: {
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-        }
-    },
-    onScanSuccess
-);
 
+        Html5Qrcode.getCameras().then(cameras => {
+            if (cameras && cameras.length) {
+                html5QrCode.start(
+                    cameras[0].id,
+                    {
+                        fps: 10,
+                        qrbox: 250
+                    },
+                    onScanSuccess
+                );
+            }
+        });
     </script>
 </body>
 </html>
+
