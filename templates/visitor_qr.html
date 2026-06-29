@@ -5,18 +5,18 @@
     <title>来訪者QRコード</title>
 
     <style>
-        /* QRコードをスマホで大きく表示する */
+        /* QRコードをスマホで最大サイズで表示する */
         .qr-container svg {
-            width: 80vw;        /* 画面幅の80% → スマホで大きく表示 */
-            max-width: 350px;   /* 最大サイズ */
-            height: auto;
+            width: 100vw !important;     /* 画面幅いっぱい */
+            max-width: 500px !important; /* 最大サイズ */
+            height: auto !important;
             display: block;
             margin: 20px auto;
         }
 
         /* visitor_id の文字を大きく */
         .visitor-id {
-            font-size: 24px;
+            font-size: 28px;
             margin-top: 20px;
         }
     </style>
@@ -24,7 +24,6 @@
 
 <body style="text-align:center; margin-top:30px;">
 
-    <!-- ★ここが「HTML側をこうする」の意味 -->
     <div class="qr-container">
         {{ qr_svg|safe }}
     </div>
