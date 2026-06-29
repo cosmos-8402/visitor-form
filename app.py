@@ -33,6 +33,10 @@ CORS(app)
 def home():
     return render_template("index.html")
 
+@app.route("/health")
+def health():
+    return "OK", 200
+
 # ① 受付QR（入口QR） SVG Path 方式
 @app.route("/reception_qr")
 def reception_qr():
