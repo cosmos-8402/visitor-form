@@ -109,6 +109,11 @@ def visitor_qr(visitor_id):
     # ★ スマホで見やすいようにサイズ指定
     return render_template("visitor_qr.html", qr_svg=qr_svg, visitor_id=visitor_id)
 
+# ④ QRコード読み取り（退館用）
+@app.route("/scan_checkout")
+def scan_checkout():
+    return render_template("scan_checkout.html")
+
 @app.route("/checkout/<visitor_id>")
 def checkout(visitor_id):
     sheet = get_sheet()
