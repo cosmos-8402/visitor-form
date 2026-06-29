@@ -8,6 +8,8 @@ import os
 import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
+import pytz
 
 def get_sheet():
     creds_json = os.getenv("GOOGLE_CREDENTIALS")
@@ -51,9 +53,7 @@ def reception_qr():
 def visitor():
     data = request.json
     sheet = get_sheet()
-    from datetime import datetime
-    import pytz
-
+    
     JST = pytz.timezone("Asia/Tokyo")
     now = datetime.now(JST)
     date_str = now.strftime("%Y/%m/%d")
