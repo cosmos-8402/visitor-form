@@ -51,8 +51,8 @@ def reception_qr():
 def visitor():
     data = request.json
     sheet = get_sheet()
-　　from datetime import datetime
-　　import pytz
+　  from datetime import datetime
+    import pytz
 
     JST = pytz.timezone("Asia/Tokyo")
     now = datetime.now(JST)
