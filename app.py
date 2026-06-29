@@ -52,11 +52,34 @@ def visitor():
     data = request.json
     sheet = get_sheet()
 
+    # JST
     now = datetime.now()
     date_str = now.strftime("%Y/%m/%d")
-    time_str = now.strftime("%H:%M")
-    visitor_id = f"VIS-{now.strftime('%Y%m%d-%H%M%S')}"
+    today_key = now.strftime("%Y%m%d")
 
+    # 既存データ取得
+    records = sheet.get_all_records()
+
+    # 今日の visitor_id を抽出
+    today_ids = [
+        r["visitor_id"] for r in records
+        if str(r["visitor_id"]).startswith(f"VIS-{today_key}")
+    ]
+
+    # 連番を決定
+    if today_ids:
+        # 末尾の番号を取り出す
+        last_num = max(int(t.split("-")[-1]) for t in today_ids)
+        new_num = last_num + 1
+    else:
+        new_num = 1
+
+    visitor_id = f"VIS-{today_key}-{new_num:03d}"
+
+    # 時刻（JST）
+    time_str = now.strftime("%H:%M")
+
+    # シートに書き込み
     sheet.append_row([
         date_str,
         time_str,
@@ -78,11 +101,8 @@ def visitor_qr(visitor_id):
     img.save(buffer)
     qr_svg = buffer.getvalue().decode()
 
-    return render_template("visitor_qr.html", qr_svg=qr_svg)
-
-@app.route("/scan_checkout")
-def scan_checkout():
-    return render_template("scan_checkout.html")
+    # ★ スマホで見やすいようにサイズ指定
+    return render_template("visitor_qr.html", qr_svg=qr_svg, visitor_id=visitor_id)
 
 @app.route("/checkout/<visitor_id>")
 def checkout(visitor_id):
