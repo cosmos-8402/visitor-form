@@ -22,8 +22,8 @@
 
     <script>
         function onScanSuccess(decodedText) {
-            // visitor_id を取得したら退館処理へ自動遷移
-            window.location.href = "/checkout/" + decodedText;
+            const id = decodedText.trim();   // ← これが決め手
+            window.location.href = "/checkout/" + id;
         }
 
         const html5QrCode = new Html5Qrcode("reader");
