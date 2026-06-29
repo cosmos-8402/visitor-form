@@ -53,7 +53,7 @@ def reception_qr():
 def visitor():
     data = request.json
     sheet = get_sheet()
-    
+
     JST = pytz.timezone("Asia/Tokyo")
     now = datetime.now(JST)
     date_str = now.strftime("%Y/%m/%d")
@@ -70,7 +70,6 @@ def visitor():
 
     # 連番を決定
     if today_ids:
-        # 末尾の番号を取り出す
         last_num = max(int(t.split("-")[-1]) for t in today_ids)
         new_num = last_num + 1
     else:
