@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>来訪者QRコード</title>
 </head>
-<body>
-    <h1>来訪者ID QRコード</h1>
-    <p>受付でこのQRコードを提示してください。</p>
+<body style="text-align:center; margin-top:30px;">
 
-    <div>{{ qr_svg|safe }}</div>
+    <!-- QRコードを大きく表示（300px枠） -->
+    <div style="width:300px; margin:auto;">
+        {{ qr_svg|safe }}
+    </div>
 
-    <p>ID: {{ visitor_id }}</p>
+    <!-- visitor_id を大きく表示 -->
+    <p style="font-size:24px; margin-top:20px;">
+        ID: {{ visitor_id }}
+    </p>
+
 </body>
-</html> 
+</html>
