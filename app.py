@@ -51,9 +51,11 @@ def reception_qr():
 def visitor():
     data = request.json
     sheet = get_sheet()
+　　from datetime import datetime
+　　import pytz
 
-    # JST
-    now = datetime.now()
+    JST = pytz.timezone("Asia/Tokyo")
+    now = datetime.now(JST)
     date_str = now.strftime("%Y/%m/%d")
     today_key = now.strftime("%Y%m%d")
 
@@ -121,8 +123,9 @@ def checkout(visitor_id):
     if row_index is None:
         return f"ID {visitor_id} は見つかりませんでした。"
 
-    # 退館時刻を記録
-    now = datetime.now().strftime("%H:%M")
+    # 退館時刻を記録（JST）
+    JST = pytz.timezone("Asia/Tokyo")
+    now = datetime.now(JST).strftime("%H:%M")
     sheet.update_cell(row_index, 7, now)  # G列に退館時刻を記録
 
     return render_template("checkout_done.html", visitor_id=visitor_id)
