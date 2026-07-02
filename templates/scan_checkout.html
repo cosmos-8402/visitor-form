@@ -37,16 +37,22 @@
 
         const html5QrCode = new Html5Qrcode("reader");
 
-        Html5Qrcode.getCameras().then(cameras => {
-            if (cameras && cameras.length) {
-                html5QrCode.start(
-                    cameras[0].id,
-                    {
-                        fps: 10,
-                        qrbox: 250
-                    },
-                    onScanSuccess
-                );
+        html5QrCode.start(
+            cameras[0].id,
+            {
+                fps: 10,
+                qrbox: 250,
+
+                // ★ 高解像度指定（読み取り速度UP）
+                videoConstraints: {
+                      width: { ideal: 1920 },
+                      height: { ideal: 1080 },
+                      facingMode: "environment"
+                }
+           },
+           onScanSuccess
+        );
+
             }
         });
     </script>
