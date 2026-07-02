@@ -1,38 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>来訪者QRコード</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>本人ID QRコード</title>
 
     <style>
-        /* QRコードをスマホで最大サイズで表示する */
-        .qr-container svg {
-            width: 100vw !important;     /* 画面幅いっぱい */
-            max-width: 700px !important; /* ← 読み取り速度UPのため拡大 */
-            height: auto !important;
-            display: block;
-            margin: 20px auto;
+        body {
+            text-align: center;
+            font-family: sans-serif;
+            padding: 20px;
         }
-
-
-        /* visitor_id の文字を特大サイズにする */
+        .qr-image {
+            width: 100vw;
+            max-width: 700px; /* ← 読み取り速度UPのため拡大 */
+            height: auto;
+            margin-top: 20px;
+        }
         .visitor-id {
-            font-size: 40px;   /* さらに大きく */
-            font-weight: bold; /* 太字で視認性アップ */
-            margin-top: 25px;
+            font-size: 24px;
+            margin-top: 20px;
         }
     </style>
 </head>
 
-<body style="text-align:center; margin-top:30px;">
+<body>
+    <h1>本人ID QRコード</h1>
 
-    <div class="qr-container">
-        {{ qr_svg|safe }}
-    </div>
+    <img src="data:image/png;base64,{{ qr_png }}" class="qr-image">
 
-    <p class="visitor-id">
-        ID: {{ visitor_id }}
-    </p>
-
+    <div class="visitor-id">ID: {{ visitor_id }}</div>
 </body>
 </html>
