@@ -32,8 +32,21 @@
     <script>
         function onScanSuccess(decodedText) {
             console.log("QR:", decodedText);
-            window.location.href = "/checkout/" + decodedText;
-        }
+
+            // 画面に読み取ったテキストを即表示
+            document.getElementById("result").innerText = "読み取り: " + decodedText;
+
+            // 非同期で退館処理を送信（高速）
+            fetch("/checkout/" + decodedText, { method: "POST" })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("status").innerText = "退館処理: " + data.status;
+                })
+                .catch(err => {
+                    document.getElementById("status").innerText = "退館エラー: " + err;
+                });
+          }
+
 
         const html5QrCode = new Html5Qrcode("reader");
 
