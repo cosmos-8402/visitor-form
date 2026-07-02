@@ -37,24 +37,32 @@
 
         const html5QrCode = new Html5Qrcode("reader");
 
-        html5QrCode.start(
-            cameras[0].id,
-            {
-                fps: 10,
-                qrbox: 250,
+        Html5Qrcode.getCameras().then(cameras => {
+    　　　　 if (cameras && cameras.length) {
+                html5QrCode.start(
+                    cameras[0].id,
+                    {
+                        fps: 10,
+                        qrbox: 250,
+                        videoConstraints: {
+                            facingMode: "environment",
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        }
+                   },
+                   onScanSuccess
+               ).catch(err => {
+                   console.error("カメラ起動エラー:", err);
+                   alert("カメラを起動できませんでした: " + err);
+               });
+           } else {
+               alert("カメラが検出されませんでした。");
+           }
+       }).catch(err => {
+           console.error("カメラ取得エラー:", err);
+           alert("カメラ取得に失敗しました: " + err);
+       });
 
-                // ★ 高解像度指定（読み取り速度UP）
-                videoConstraints: {
-                      facingMode: "environment",
-    　　　　　　　　　　width: { ideal: 1280 },
-    　　　　　　　　　　height: { ideal: 720 }
-                }
-           },
-           onScanSuccess
-        );
-
-            }
-        });
     </script>
 </body>
 </html>
