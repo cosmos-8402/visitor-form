@@ -37,6 +37,10 @@ def home():
 def health():
     return "OK", 200
 
+@app.route("/admin")
+def admin():
+    return render_template("admin.html")
+
 # ① 受付QR（入口QR） SVG Path 方式
 @app.route("/reception_qr")
 def reception_qr():
