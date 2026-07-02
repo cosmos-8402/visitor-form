@@ -1,12 +1,36 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>退館完了</title>
+    <style>
+        body {
+            text-align: center;
+            margin-top: 80px;
+            font-family: sans-serif;
+        }
+        .message {
+            font-size: 40px;
+            font-weight: bold;
+            color: #28a745; /* 緑で成功を強調 */
+            margin-bottom: 30px;
+        }
+        .sub {
+            font-size: 24px;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-    <h1>退館処理が完了しました</h1>
-    <p>ID: {{ visitor_id }}</p>
+
+    <div class="message">退館処理が完了しました</div>
+    <div class="sub">スプレッドシートに退館時刻を記録しました</div>
+
+    <!-- 成功音（短い通知音） -->
+    <audio autoplay>
+        <source src="/static/success.mp3" type="audio/mpeg">
+    </audio>
+
 </body>
 </html>
+
