@@ -19,6 +19,25 @@
             font-size: 28px;
             margin-top: 20px;
         }
+
+        /* ボタンの共通デザイン */
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .btn-blue {
+            background: #007bff;
+        }
+
+        .btn-green {
+            background: #28a745;
+        }
     </style>
 </head>
 
@@ -30,6 +49,22 @@
 
     <p class="visitor-id">
         ID: {{ visitor_id }}
+    </p>
+
+    <!-- 退館QR読み取りボタン -->
+    <p>
+        <a href="/scan_checkout" class="btn btn-blue">
+            退館QR読み取りを開く
+        </a>
+    </p>
+
+    <!-- スプレッドシートボタン -->
+    <p>
+        <a href="https://docs.google.com/spreadsheets/d/1B0YR6_clv6WfNdzubSTv4VJ7kVrjvdPrEJX6OSGhwhg/edit?gid=0#gid=0"
+           target="_blank"
+           class="btn btn-green">
+            来訪者リスト（Google Sheets）を開く
+        </a>
     </p>
 
 </body>
