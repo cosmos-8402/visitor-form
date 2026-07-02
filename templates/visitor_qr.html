@@ -8,35 +8,17 @@
         /* QRコードをスマホで最大サイズで表示する */
         .qr-container svg {
             width: 100vw !important;     /* 画面幅いっぱい */
-            max-width: 500px !important; /* 最大サイズ */
+            max-width: 600px !important; /* 最大サイズをさらに拡大 */
             height: auto !important;
             display: block;
             margin: 20px auto;
         }
 
-        /* visitor_id の文字を大きく */
+        /* visitor_id の文字を特大サイズにする */
         .visitor-id {
-            font-size: 28px;
-            margin-top: 20px;
-        }
-
-        /* ボタンの共通デザイン */
-        .btn {
-            display: inline-block;
-            padding: 12px 20px;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-
-        .btn-blue {
-            background: #007bff;
-        }
-
-        .btn-green {
-            background: #28a745;
+            font-size: 40px;   /* さらに大きく */
+            font-weight: bold; /* 太字で視認性アップ */
+            margin-top: 25px;
         }
     </style>
 </head>
@@ -49,22 +31,6 @@
 
     <p class="visitor-id">
         ID: {{ visitor_id }}
-    </p>
-
-    <!-- 退館QR読み取りボタン -->
-    <p>
-        <a href="/scan_checkout" class="btn btn-blue">
-            退館QR読み取りを開く
-        </a>
-    </p>
-
-    <!-- スプレッドシートボタン -->
-    <p>
-        <a href="https://docs.google.com/spreadsheets/d/1B0YR6_clv6WfNdzubSTv4VJ7kVrjvdPrEJX6OSGhwhg/edit?gid=0#gid=0"
-           target="_blank"
-           class="btn btn-green">
-            来訪者リスト（Google Sheets）を開く
-        </a>
     </p>
 
 </body>
