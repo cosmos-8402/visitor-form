@@ -100,7 +100,7 @@ def visitor():
 
     return jsonify({"visitor_id": visitor_id})
 
-# ★③ 本人ID QR 表示ページ（最速化版）
+# ★③ 本人ID QR 表示ページ（PNG版・最速化）
 @app.route("/visitor_qr/<visitor_id>")
 def visitor_qr(visitor_id):
 
@@ -117,12 +117,14 @@ def visitor_qr(visitor_id):
     # 黒の濃度を最大化（コントラストUP）
     img = qr.make_image(fill_color="#000000", back_color="#FFFFFF")
 
-    # SVGとして出力
+    # PNGとして出力
     buffer = BytesIO()
-    img.save(buffer)
-    qr_svg = buffer.getvalue().decode()
+    img.save(buffer, format="PNG")
 
-    return render_template("visitor_qr.html", qr_svg=qr_svg, visitor_id=visitor_id)
+    # Base64化してHTMLに埋め込む
+    qr_png = base64.b64encode(buffer.getvalue()).decode()
+
+    return render_template("visitor_qr.html", qr_png=qr_png, visitor_id=visitor_id)
 
 # ④ QRコード読み取り（退館用）
 @app.route("/scan_checkout")
