@@ -100,17 +100,28 @@ def visitor():
 
     return jsonify({"visitor_id": visitor_id})
 
-# ★③ 本人ID QR 表示ページ（ここに置くのが最適）
+# ★③ 本人ID QR 表示ページ（最速化版）
 @app.route("/visitor_qr/<visitor_id>")
 def visitor_qr(visitor_id):
-    factory = qrcode.image.svg.SvgPathImage
-    img = qrcode.make(visitor_id, image_factory=factory)
 
+    # QRコード詳細設定（読み取り速度UP）
+    qr = qrcode.QRCode(
+        version=1,
+        box_size=10,
+        border=8   # ← 余白を広げて読み取り速度UP
+    )
+
+    qr.add_data(visitor_id)
+    qr.make(fit=True)
+
+    # 黒の濃度を最大化（コントラストUP）
+    img = qr.make_image(fill_color="#000000", back_color="#FFFFFF")
+
+    # SVGとして出力
     buffer = BytesIO()
     img.save(buffer)
     qr_svg = buffer.getvalue().decode()
 
-    # ★ スマホで見やすいようにサイズ指定
     return render_template("visitor_qr.html", qr_svg=qr_svg, visitor_id=visitor_id)
 
 # ④ QRコード読み取り（退館用）
