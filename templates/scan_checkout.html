@@ -54,16 +54,14 @@ window.addEventListener("DOMContentLoaded", async () => {
     const html5QrCode = new Html5Qrcode("reader");
 
     try {
-        // 一度カメラを開いて権限確認
+        // 権限確認＋ウォームアップ
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        // 取得したストリームを停止（競合防止）
         stream.getTracks().forEach(track => track.stop());
 
-        // カメラ一覧取得
         const cameras = await Html5Qrcode.getCameras();
         const cameraId = "277aa00009196eae2d8cf67a099b12539a71667ae06d39ea64d906200d08e2f2";
 
-        // 少し待ってから起動（初期化安定化）
+        // 起動を3秒遅らせて安定化
         setTimeout(async () => {
             await html5QrCode.start(
                 cameraId,
@@ -71,14 +69,14 @@ window.addEventListener("DOMContentLoaded", async () => {
                     fps: 10,
                     qrbox: 250,
                     videoConstraints: {
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
+                        width: { ideal: 640 },   // ← 解像度を下げる
+                        height: { ideal: 480 }   // ← C270の安定動作範囲
                     }
                 },
                 onScanSuccess
             );
             console.log("カメラ起動成功");
-        }, 2000);
+        }, 3000);
     } catch (err) {
         alert("カメラ起動エラー: " + err);
         console.error(err);
