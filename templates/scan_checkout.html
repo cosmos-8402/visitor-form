@@ -60,9 +60,10 @@ window.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const cameraId = "277aa00009196eae2d8cf67a099b12539a71667ae06d39ea64d906200d08e2f2";
+        // 最初に検出されたカメラを使用
+        const cameraId = cameras[0].id;
+        console.log("使用カメラ:", cameras[0].label);
 
-        // 5秒待機して安定化
         setTimeout(() => {
             html5QrCode.start(
                 cameraId,
@@ -78,13 +79,13 @@ window.addEventListener("DOMContentLoaded", async () => {
             ).catch(err => {
                 alert("カメラ起動エラー: " + err);
             });
-        }, 5000);
-
+        }, 3000);
     } catch (err) {
         alert("初期化エラー: " + err);
         console.error(err);
     }
 });
+
 
 
 </script>
