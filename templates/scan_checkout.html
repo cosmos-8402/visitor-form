@@ -40,14 +40,8 @@ function onScanSuccess(decodedText) {
     console.log("QR:", decodedText);
     document.getElementById("result").innerText = "読み取り: " + decodedText;
 
-    fetch("/checkout/" + decodedText, { method: "POST" })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("status").innerText = "退館処理: " + data.status;
-        })
-        .catch(err => {
-            document.getElementById("status").innerText = "退館エラー: " + err;
-        });
+    // ページ遷移で退館処理を実行
+    window.location.href = "/checkout/" + decodedText;
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
