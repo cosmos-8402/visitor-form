@@ -108,8 +108,8 @@ def visitor_qr(visitor_id):
     # QRコード詳細設定（読み取り速度UP）
     qr = qrcode.QRCode(
         version=1,
-        box_size=10,
-        border=8   # ← 余白を広げて読み取り速度UP
+        box_size=12,
+        border=10   # ← 余白を広げて読み取り速度UP
     )
 
     qr.add_data(visitor_id)
