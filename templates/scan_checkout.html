@@ -36,55 +36,60 @@
     <div id="status" style="margin-top: 10px; font-size: 18px; color: #555;"></div>
 
     <script>
-        function onScanSuccess(decodedText) {
-            console.log("QR:", decodedText);
+    function onScanSuccess(decodedText) {
+        console.log("QR:", decodedText);
+        document.getElementById("result").innerText = "読み取り: " + decodedText;
 
-            // 画面に読み取ったテキストを即表示
-            document.getElementById("result").innerText = "読み取り: " + decodedText;
+        fetch("/checkout/" + decodedText, { method: "POST" })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("status").innerText = "退館処理: " + data.status;
+            })
+            .catch(err => {
+                document.getElementById("status").innerText = "退館エラー: " + err;
+            });
+    }
 
-            // 非同期で退館処理を送信（高速）
-            fetch("/checkout/" + decodedText, { method: "POST" })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById("status").innerText = "退館処理: " + data.status;
-                })
-                .catch(err => {
-                    document.getElementById("status").innerText = "退館エラー: " + err;
-                });
-          }
+    const html5QrCode = new Html5Qrcode("reader");
 
+// ページ読み込み時に前回のセッションを停止
+window.addEventListener("beforeunload", () => {
+    html5QrCode.stop().catch(() => {});
+});
 
-        const html5QrCode = new Html5Qrcode("reader");
+setTimeout(() => {
+    Html5Qrcode.getCameras().then(cameras => {
+        if (cameras && cameras.length) {
+            // 背面カメラを優先選択
+            const backCam = cameras.find(cam => cam.label.toLowerCase().includes("back"));
+            const cameraId = backCam ? backCam.id : cameras[0].id;
 
-    setTimeout(() => {
-        Html5Qrcode.getCameras().then(cameras => {
-    　　　　 if (cameras && cameras.length) {
-                html5QrCode.start(
-                    cameras[0].id,
-                    {
-                        fps: 10,
-                        qrbox: 250,
-                        videoConstraints: {
-                            facingMode: "environment",
-                            width: { ideal: 1280 },
-                            height: { ideal: 720 }
-                        }
-                   },
-                   onScanSuccess
-               ).catch(err => {
-                   console.error("カメラ起動エラー:", err);
-                   alert("カメラを起動できませんでした: " + err);
-               });
-           } else {
-               alert("カメラが検出されませんでした。");
-           }
-       }).catch(err => {
-           console.error("カメラ取得エラー:", err);
-           alert("カメラ取得に失敗しました: " + err);
-       });
-   }, 500); // ← 0.5秒待機 
-        
-    </script>
+            html5QrCode.start(
+                cameraId,
+                {
+                    fps: 10,
+                    qrbox: 250,
+                    videoConstraints: {
+                        facingMode: "environment",
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                },
+                onScanSuccess
+            ).catch(err => {
+                console.error("カメラ起動エラー:", err);
+                alert("カメラを起動できませんでした: " + err);
+            });
+        } else {
+            alert("カメラが検出されませんでした。");
+        }
+    }).catch(err => {
+        console.error("カメラ取得エラー:", err);
+        alert("カメラ取得に失敗しました: " + err);
+    });
+}, 1000); // ← 1秒待機に変更
+</script>
+
 </body>
 </html>
 
