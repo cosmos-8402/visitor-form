@@ -59,34 +59,31 @@ window.addEventListener("beforeunload", () => {
 
 setTimeout(() => {
     Html5Qrcode.getCameras().then(cameras => {
-        if (cameras && cameras.length) {
-            // 背面カメラを優先選択
-            const backCam = cameras.find(cam => cam.label.toLowerCase().includes("back"));
-            const cameraId = backCam ? backCam.id : cameras[0].id;
+    // USBやWebcamを含むカメラ名を優先
+    const externalCam = cameras.find(cam =>
+        cam.label.toLowerCase().includes("usb") ||
+        cam.label.toLowerCase().includes("webcam")
+    );
+    const cameraId = externalCam ? externalCam.id : cameras[0].id;
 
-            html5QrCode.start(
-                cameraId,
-                {
-                    fps: 10,
-                    qrbox: 250,
-                    videoConstraints: {
-                        facingMode: "environment",
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    }
-                },
-                onScanSuccess
-            ).catch(err => {
-                console.error("カメラ起動エラー:", err);
-                alert("カメラを起動できませんでした: " + err);
-            });
-        } else {
-            alert("カメラが検出されませんでした。");
-        }
-    }).catch(err => {
-        console.error("カメラ取得エラー:", err);
-        alert("カメラ取得に失敗しました: " + err);
+    html5QrCode.start(
+        cameraId,
+        {
+            fps: 10,
+            qrbox: 250,
+            videoConstraints: {
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            }
+        },
+        onScanSuccess
+    ).catch(err => {
+        alert("カメラ起動エラー: " + err);
     });
+}).catch(err => {
+    alert("カメラ取得に失敗しました: " + err);
+});
+
 }, 1000); // ← 1秒待機に変更
 </script>
 
