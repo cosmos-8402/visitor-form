@@ -60,11 +60,7 @@ window.addEventListener("beforeunload", () => {
 setTimeout(() => {
     Html5Qrcode.getCameras().then(cameras => {
     // USBやWebcamを含むカメラ名を優先
-    const externalCam = cameras.find(cam =>
-        cam.label.toLowerCase().includes("usb") ||
-        cam.label.toLowerCase().includes("webcam")
-    );
-    const cameraId = externalCam ? externalCam.id : cameras[0].id;
+    const cameraId = "277aa00009196eae2d8cf67a099b12539a71667ae06d39ea64d906200d08e2f2"; // ← Logi C270 の ID
 
     html5QrCode.start(
         cameraId,
@@ -80,9 +76,7 @@ setTimeout(() => {
     ).catch(err => {
         alert("カメラ起動エラー: " + err);
     });
-}).catch(err => {
-    alert("カメラ取得に失敗しました: " + err);
-});
+
 
 }, 1000); // ← 1秒待機に変更
 </script>
