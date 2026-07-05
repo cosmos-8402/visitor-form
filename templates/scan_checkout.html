@@ -53,20 +53,17 @@ function onScanSuccess(decodedText) {
 window.addEventListener("DOMContentLoaded", async () => {
     const html5QrCode = new Html5Qrcode("reader");
 
-    // 既存ストリームを停止（安全策）
     try {
-        const tracks = (await navigator.mediaDevices.getUserMedia({ video: true })).getTracks();
-        tracks.forEach(track => track.stop());
-    } catch (e) {
-        console.warn("初期ストリーム停止時の警告:", e);
-    }
+        // 一度カメラを開いて権限確認
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        // 取得したストリームを停止（競合防止）
+        stream.getTracks().forEach(track => track.stop());
 
-    try {
-        await navigator.mediaDevices.getUserMedia({ video: true }); // 権限確認
+        // カメラ一覧取得
         const cameras = await Html5Qrcode.getCameras();
         const cameraId = "277aa00009196eae2d8cf67a099b12539a71667ae06d39ea64d906200d08e2f2";
 
-        // 起動を3秒遅らせる
+        // 少し待ってから起動（初期化安定化）
         setTimeout(async () => {
             await html5QrCode.start(
                 cameraId,
@@ -81,12 +78,13 @@ window.addEventListener("DOMContentLoaded", async () => {
                 onScanSuccess
             );
             console.log("カメラ起動成功");
-        }, 3000);
+        }, 2000);
     } catch (err) {
         alert("カメラ起動エラー: " + err);
         console.error(err);
     }
 });
+
 </script>
 
 
