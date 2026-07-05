@@ -35,7 +35,7 @@
 
     <div id="status" style="margin-top: 10px; font-size: 18px; color: #555;"></div>
 
-    <script>
+<script>
 function onScanSuccess(decodedText) {
     console.log("QR:", decodedText);
     document.getElementById("result").innerText = "読み取り: " + decodedText;
@@ -50,37 +50,40 @@ function onScanSuccess(decodedText) {
         });
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-
+window.addEventListener("DOMContentLoaded", async () => {
     const html5QrCode = new Html5Qrcode("reader");
 
-    setTimeout(() => {
+    try {
+        const cameras = await Html5Qrcode.getCameras();
+        if (!cameras || cameras.length === 0) {
+            alert("カメラが検出されませんでした。");
+            return;
+        }
 
-        Html5Qrcode.getCameras().then(cameras => {
+        // 外付けカメラのIDを直接指定
+        const cameraId = "277aa00009196eae2d8cf67a099b12539a71667ae06d39ea64d906200d08e2f2";
 
-            const cameraId = "277aa00009196eae2d8cf67a099b12539a71667ae06d39ea64d906200d08e2f2";
+        await html5QrCode.start(
+            cameraId,
+            {
+                fps: 10,
+                qrbox: 250,
+                videoConstraints: {
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            },
+            onScanSuccess
+        );
 
-            html5QrCode.start(
-                cameraId,
-                {
-                    fps: 10,
-                    qrbox: 250,
-                    videoConstraints: {
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    }
-                },
-                onScanSuccess
-            ).catch(err => {
-                alert("カメラ起動エラー: " + err);
-            });
-
-        });
-
-    }, 1000);
-
+        console.log("カメラ起動成功");
+    } catch (err) {
+        alert("カメラ起動エラー: " + err);
+        console.error(err);
+    }
 });
 </script>
+
 
 </body>
 </html>
