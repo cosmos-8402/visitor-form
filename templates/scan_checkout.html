@@ -54,34 +54,38 @@ window.addEventListener("DOMContentLoaded", async () => {
     const html5QrCode = new Html5Qrcode("reader");
 
     try {
-        // 権限確認＋ウォームアップ
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        stream.getTracks().forEach(track => track.stop());
-
         const cameras = await Html5Qrcode.getCameras();
+        if (cameras.length === 0) {
+            alert("カメラが見つかりません");
+            return;
+        }
+
         const cameraId = "277aa00009196eae2d8cf67a099b12539a71667ae06d39ea64d906200d08e2f2";
 
-        // 起動を3秒遅らせて安定化
-        setTimeout(async () => {
-            await html5QrCode.start(
+        // 2秒待機して安定化
+        setTimeout(() => {
+            html5QrCode.start(
                 cameraId,
                 {
                     fps: 10,
                     qrbox: 250,
                     videoConstraints: {
-                        width: { ideal: 640 },   // ← 解像度を下げる
-                        height: { ideal: 480 }   // ← C270の安定動作範囲
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
                     }
                 },
                 onScanSuccess
-            );
-            console.log("カメラ起動成功");
-        }, 3000);
+            ).catch(err => {
+                alert("カメラ起動エラー: " + err);
+            });
+        }, 2000);
+
     } catch (err) {
-        alert("カメラ起動エラー: " + err);
+        alert("初期化エラー: " + err);
         console.error(err);
     }
 });
+
 
 </script>
 
