@@ -62,7 +62,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
         const cameraId = "277aa00009196eae2d8cf67a099b12539a71667ae06d39ea64d906200d08e2f2";
 
-        // 2秒待機して安定化
+        // 5秒待機して安定化
         setTimeout(() => {
             html5QrCode.start(
                 cameraId,
@@ -78,7 +78,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             ).catch(err => {
                 alert("カメラ起動エラー: " + err);
             });
-        }, 2000);
+        }, 5000);
 
     } catch (err) {
         alert("初期化エラー: " + err);
