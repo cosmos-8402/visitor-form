@@ -63,7 +63,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                 cameraId,
                 {
                     fps: 15,
-                    qrbox: 250,
+                    qrbox: 300,
                     videoConstraints: {
                         width: { ideal: 640 },
                         height: { ideal: 480 }
@@ -73,7 +73,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             ).catch(err => {
                 alert("カメラ起動エラー: " + err);
             });
-        }, 3000);
+        }, 2000);
     } catch (err) {
         alert("初期化エラー: " + err);
         console.error(err);
