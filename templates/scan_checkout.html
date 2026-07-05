@@ -38,10 +38,9 @@
 <script>
 function onScanSuccess(decodedText) {
     console.log("QR:", decodedText);
-    document.getElementById("result").innerText = "読み取り: " + decodedText;
 
-    // ページ遷移で退館処理を実行
-    window.location.href = "/checkout/" + decodedText;
+    // スマホ側のQR表示画面に visitor_id を渡す
+    window.location.href = "/visitor_qr?visitor_id=" + decodedText;
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
