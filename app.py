@@ -104,13 +104,19 @@ def visitor():
 # ★③ 本人ID QR 表示ページ（PNG版・最速化）
 @app.route("/visitor_qr/<visitor_id>")
 def visitor_qr(visitor_id):
-
+    
+    print("=== visitor_qr() CALLED ===")
+    print("RAW visitor_id:", visitor_id)
+    print("checkoutFlag:", request.args.get("checkout"))
+    
     # クエリパラメータ取得
     checkoutFlag = request.args.get("checkout")
 
     # visitor_id から ?checkout=done を除去（念のため）
     pure_id = visitor_id.split("?")[0]
-
+    
+    print("pure_id:", pure_id)
+    
     # QRコード生成
     qr = qrcode.QRCode(
         version=1,
@@ -126,7 +132,12 @@ def visitor_qr(visitor_id):
     img.save(buffer, format="PNG")
 
     qr_png = base64.b64encode(buffer.getvalue()).decode()
-
+    
+    print("Rendering visitor_qr.html with:")
+    print("visitor_id:", pure_id)
+    print("checkoutFlag:", checkoutFlag)
+    print("qr_png length:", len(qr_png))
+    
     # ★ checkoutFlag をテンプレートに渡す（これが最重要）
     return render_template(
         "visitor_qr.html",
