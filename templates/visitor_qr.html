@@ -34,10 +34,12 @@
 <div id="scan-result" style="margin-top:20px; font-size:20px; font-weight:bold;"></div>
 
 <script>
-    const params = new URLSearchParams(window.location.search);
-    const visitorId = params.get("visitor_id");
+    // URLパスの最後の部分を visitor_id として取得
+    const parts = window.location.pathname.split("/");
+    const visitorId = parts[parts.length - 1];
 
-    if (visitorId) {
+    // visitor_id が存在し、形式が VIS-xxxx の場合のみ表示
+    if (visitorId && visitorId.startsWith("VIS-")) {
         document.getElementById("scan-result").innerText = "退館ID: " + visitorId;
     }
 </script>
