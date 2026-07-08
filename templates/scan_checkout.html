@@ -40,7 +40,7 @@ function onScanSuccess(decodedText) {
     console.log("QR:", decodedText);
 
 // スマホ側のQR表示画面に visitor_id を渡す
-window.location.href = "/visitor_qr/" + decodedText;
+window.location.href = "/checkout/" + decodedText;
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
