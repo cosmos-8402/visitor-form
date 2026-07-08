@@ -175,7 +175,22 @@ def checkout(visitor_id):
 
     # ★ここでスマホ側へ「退館完了」を伝える
     return redirect(f"/visitor_qr/{visitor_id}?checkout=done")
-    
+
+@app.route("/api/check_status/<visitor_id>")
+def check_status(visitor_id):
+    sheet = get_sheet()
+    records = sheet.get_all_records()
+
+    for row in records:
+        if row.get("visitor_id") == visitor_id:
+            checkout_time = row.get("退館時刻")
+            if checkout_time:
+                return {"checkout": True}
+            else:
+                return {"checkout": False}
+
+    return {"checkout": False}
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
