@@ -36,22 +36,38 @@
     <!-- ★退館ID表示領域（JSで書き換える） -->
     <div id="scan-result" style="margin-top:20px; font-size:20px; font-weight:bold;"></div>
 
-    <script>
-        const parts = window.location.pathname.split("/");
-        const visitorId = parts[parts.length - 1];
+<script>
+    const parts = window.location.pathname.split("/");
+    const visitorId = parts[parts.length - 1];
 
-        setInterval(() => {
-            fetch(`/api/check_status/${visitorId}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.checkout === true) {
-                        if (!window.location.search.includes("checkout=done")) {
-                            window.location.href = window.location.pathname + "?checkout=done";
-                        }
+    // ★退館IDを表示する関数（これが無いと絶対に表示されない）
+    function showCheckoutIdIfDone() {
+        const params = new URLSearchParams(window.location.search);
+        const checkoutFlag = params.get("checkout");
+
+        if (checkoutFlag === "done") {
+            document.getElementById("scan-result").innerText = "退館ID: " + visitorId;
+        }
+    }
+
+    // ★PC側はURLに checkout=done が付いているので即表示
+    showCheckoutIdIfDone();
+
+    // ★スマホ側はURLが変わらないので10秒ごとに退館状態を確認
+    setInterval(() => {
+        fetch(`/api/check_status/${visitorId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.checkout === true) {
+                    if (!window.location.search.includes("checkout=done")) {
+                        window.location.href = window.location.pathname + "?checkout=done";
                     }
-                });
-        }, 10000);
-    </script>
+                }
+            })
+            .catch(err => console.error("check_status error:", err));
+    }, 10000);
+</script>
+
 
 </body>
 </html>
