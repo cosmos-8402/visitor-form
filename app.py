@@ -111,7 +111,7 @@ def visitor_qr(visitor_id):
     # visitor_id から ?checkout=done を除去
     pure_id = visitor_id.split("?")[0]
 
-    # QRコード詳細設定（読み取り速度UP）
+    # QRコード詳細設定
     qr = qrcode.QRCode(
         version=1,
         box_size=12,
