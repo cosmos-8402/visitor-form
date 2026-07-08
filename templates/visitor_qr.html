@@ -37,25 +37,19 @@
     <div id="scan-result" style="margin-top:20px; font-size:20px; font-weight:bold;"></div>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const checkoutFlag = params.get("checkout");
+        const parts = window.location.pathname.split("/");
+        const visitorId = parts[parts.length - 1];
 
-        if (checkoutFlag === "done") {
-            const parts = window.location.pathname.split("/");
-            const visitorId = parts[parts.length - 1];
-            document.getElementById("scan-result").innerText = "退館ID: " + visitorId;
-        }
-
-        // ★方法①：1秒ごとにチェックする自動ループ
         setInterval(() => {
-            const params = new URLSearchParams(window.location.search);
-            const checkoutFlag = params.get("checkout");
-
-            if (checkoutFlag === "done") {
-                const parts = window.location.pathname.split("/");
-                const visitorId = parts[parts.length - 1];
-                document.getElementById("scan-result").innerText = "退館ID: " + visitorId;
-            }
+            fetch(`/api/check_status/${visitorId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.checkout === true) {
+                        if (!window.location.search.includes("checkout=done")) {
+                            window.location.href = window.location.pathname + "?checkout=done";
+                        }
+                    }
+                });
         }, 1000);
     </script>
 
