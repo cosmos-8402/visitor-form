@@ -27,21 +27,23 @@
 <body>
     <h1>本人ID QRコード</h1>
 
+    <!-- ★入館時だけ QR画像を表示する -->
+    {% if not request.args.get('checkout') %}
     <img src="data:image/png;base64,{{ qr_png }}" class="qr-image">
-    
-<div id="scan-result" style="margin-top:20px; font-size:20px; font-weight:bold;"></div>
+    {% endif %}
 
-<script>
-    const params = new URLSearchParams(window.location.search);
-    const checkoutFlag = params.get("checkout");
+    <div id="scan-result" style="margin-top:20px; font-size:20px; font-weight:bold;"></div>
 
-    if (checkoutFlag === "done") {
-        const parts = window.location.pathname.split("/");
-        const visitorId = parts[parts.length - 1];
-        document.getElementById("scan-result").innerText = "退館ID: " + visitorId;
-    }
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const checkoutFlag = params.get("checkout");
 
-</script>
+        if (checkoutFlag === "done") {
+            const parts = window.location.pathname.split("/");
+            const visitorId = parts[parts.length - 1];
+            document.getElementById("scan-result").innerText = "退館ID: " + visitorId;
+        }
+    </script>
 
 </body>
 </html>
