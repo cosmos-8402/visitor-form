@@ -108,13 +108,16 @@ def visitor_qr(visitor_id):
     # クエリパラメータ取得
     checkoutFlag = request.args.get("checkout")
 
+    # visitor_id から ?checkout=done を除去（念のため）
+    pure_id = visitor_id.split("?")[0]
+
     # QRコード生成
     qr = qrcode.QRCode(
         version=1,
         box_size=12,
         border=10
     )
-    qr.add_data(visitor_id)
+    qr.add_data(pure_id)
     qr.make(fit=True)
 
     img = qr.make_image(fill_color="#000000", back_color="#FFFFFF")
@@ -128,7 +131,7 @@ def visitor_qr(visitor_id):
     return render_template(
         "visitor_qr.html",
         qr_png=qr_png,
-        visitor_id=visitor_id,
+        visitor_id=pure_id,
         checkoutFlag=checkoutFlag
     )
 
