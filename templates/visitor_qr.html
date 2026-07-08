@@ -45,6 +45,18 @@
             const visitorId = parts[parts.length - 1];
             document.getElementById("scan-result").innerText = "退館ID: " + visitorId;
         }
+
+        // ★方法①：1秒ごとにチェックする自動ループ
+        setInterval(() => {
+            const params = new URLSearchParams(window.location.search);
+            const checkoutFlag = params.get("checkout");
+
+            if (checkoutFlag === "done") {
+                const parts = window.location.pathname.split("/");
+                const visitorId = parts[parts.length - 1];
+                document.getElementById("scan-result").innerText = "退館ID: " + visitorId;
+            }
+        }, 1000);
     </script>
 
 </body>
