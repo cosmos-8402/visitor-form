@@ -178,8 +178,12 @@ def checkout(visitor_id):
 
 @app.route("/api/check_status/<visitor_id>")
 def check_status(visitor_id):
-    sheet = get_sheet()
-    records = sheet.get_all_records()
+    try:
+        sheet = get_sheet()
+        records = sheet.get_all_records()
+    except Exception as e:
+        print("Error accessing sheet:", e)
+        return {"checkout": False}
 
     for row in records:
         if row.get("visitor_id") == visitor_id:
