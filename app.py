@@ -154,7 +154,8 @@ def checkout(visitor_id):
     now = datetime.now(JST).strftime("%H:%M")
     sheet.update_cell(row_index, 7, now)  # G列に退館時刻を記録
 
-    return render_template("checkout_done.html", visitor_id=visitor_id)
+    # ★ここでスマホ側へ「退館完了」を伝える
+    return redirect(f"/visitor_qr/{visitor_id}?checkout=done")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
