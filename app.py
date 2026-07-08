@@ -156,7 +156,7 @@ def checkout(visitor_id):
 
     # ★ここでスマホ側へ「退館完了」を伝える
     return redirect(f"/visitor_qr/{visitor_id}?checkout=done")
-
+    
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
